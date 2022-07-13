@@ -1,4 +1,5 @@
 -- < 쇼핑몰에 대한 전체 테이블 설계 >
+-- < table design for shopping mall >
 -- 쇼핑몰 개발에 필요한 테이블 수 : 6 + 1개
 -- member, manager, product, cart, buy, bank, board
 -- member 테이블 : 회원(사용자) 정보에 대한 테이블 
