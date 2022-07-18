@@ -12,12 +12,14 @@ import javax.sql.DataSource;
 
 public class ProductDBBean {
 	// JDBC에서 사용할 객체 변수 선언
+	// declare the objects for JDBC(Java Database Connectivity)
 	private Connection conn = null;
 	private PreparedStatement pstmt = null;
 	private ResultSet rs = null;
 	private String sql = "";
 	
 	// singleton pattern 적용
+	// singleton pattern 사용이유: 사용할 때 마다 인스턴스가 생성되는 것을 막기 위해 static 사용하여 하나의 인스턴스를 외부에서 사용하게 함.
 	private ProductDBBean() {}
 	
 	private static ProductDBBean instance = new ProductDBBean();
@@ -27,6 +29,7 @@ public class ProductDBBean {
 	}
 	
 	// connection pool 사용
+	// DBCP(DataBase Connection Pool) 연동을 위한 메소드
 	private Connection getConnection() throws Exception {
 		Context initCtx = new InitialContext();
 		Context envCtx = (Context)initCtx.lookup("java:comp/env");
@@ -34,7 +37,7 @@ public class ProductDBBean {
 		return ds.getConnection();
 	}
 	
-	// JDBC에서 사용할 객체 닫기
+	// JDBC에서 사용할 객체(Connection, PreparedStatement, ResultSet) 닫기
 	private void close() {
 		if(rs != null) try {rs.close();} catch(Exception e) {e.printStackTrace();}
 		if(pstmt != null) try {pstmt.close();} catch(Exception e) {e.printStackTrace();}
