@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>관리자 로그인 폼 페이지</title>
+<title>Manager login form page</title>
 <style>
 #container { width: 300px; margin: 20px auto;}
 h2 { text-align: center; color: white; border-radius: 15px 15px 15px 0; border: 3px solid #dee2e6; padding: 0.5em 0.6em; color: white; font-size: 1.5em; background: #b7c0df;}
@@ -24,12 +24,12 @@ window.onload = function() {
 		var form = document.loginForm;
 		
 		if(!form.managerId.value) {
-			alert("관리자 아이디를 입력하시오.");
+			alert("Enter Manager's ID.");
 			form.managerId.focus();
 			return;
 		}
 		if(!form.managerPasswd.value) {
-			alert("관리자 비밀번호를 입력하시오.");
+			alert("Enther Manager's Password.");
 			form.managerPasswd.focus();
 			return;
 		}
@@ -41,15 +41,15 @@ window.onload = function() {
 <body>
 
 <div id="container">
-	<h2>관리자 로그인</h2>
+	<h2>Manager Login</h2>
 	<form method="post" action="managerLoginPro.jsp" name="loginForm">
 		<table>
 			<tr>
-				<th width="30%">아이디</th>
+				<th width="30%">ID</th>
 				<td width="70%"><input type="text" name="managerId" size="24"></td>			
 			</tr>
 			<tr>
-				<th>비밀번호</th>
+				<th>Password</th>
 				<td><input type="password" name="managerPasswd" size="24" maxlength="16"></td>			
 			</tr>
 			<tr class="btns_row">
