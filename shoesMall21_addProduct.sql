@@ -1,4 +1,4 @@
--- 2021/08/13(금)
+-- 2021/08/13
 use db02;
 show tables;
 select * from product;
