@@ -11,7 +11,7 @@ import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 public class MemberDBBean {
-	// DB 연동, 쿼리 실행에 대한 변수선언
+	// DB link, Variable Declaration for Query Execution
 	private Connection conn = null;
 	private PreparedStatement pstmt = null;
 	private ResultSet rs = null;
@@ -26,7 +26,7 @@ public class MemberDBBean {
 		return instance;
 	}
 	
-	// Connection Pool 설정 
+	// Connection Pool 
 	private Connection getConnection() throws Exception {
 		Context initCtx = new InitialContext();
 		Context envCtx = (Context)initCtx.lookup("java:comp/env");
@@ -34,14 +34,14 @@ public class MemberDBBean {
 		return ds.getConnection();
 	}
 	
-	// DB 연동, 쿼리 실행 변수를 해제 메소드 설정 
+	// DB link, set the release method for query executable variables
 	private void close() {
 		try { if(rs != null) rs.close(); } catch(Exception e) { e.printStackTrace();} 
 		try { if(pstmt != null) pstmt.close(); } catch(Exception e) { e.printStackTrace();} 
 		try { if(conn != null) conn.close(); } catch(Exception e) { e.printStackTrace();} 
 	}
 	
-	// 회원 가입 메소드 - check : 1(가입), 0(가입에러)
+	// Method of member registration - check : 1(registration), 0(error)
 	public int insertMember(MemberDataBean member) {
 		int check = 0;
 		try {
@@ -65,9 +65,9 @@ public class MemberDBBean {
 		return check;
 	}
 	// 회원 인증 메소드
-	// x= 1 : 아이디 존재, 비밀번호 일치
-	// x= 0 : 아이디는 존재, 비밀번호는 불일치
-	// x=-1 : 아이디, 비밀번호 불일치 
+	// x= 1 : ID exists, correct password
+	// x= 0 : ID exists, incorrect password
+	// x=-1 : Incorrect ID, password 
 	public int userCheck(String id, String passwd) {
 		int x = -1;
 		try {
@@ -77,11 +77,11 @@ public class MemberDBBean {
 			pstmt.setString(1, id);
 			rs = pstmt.executeQuery();
 			
-			if(rs.next()) { // 아이디 존재 
+			if(rs.next()) { // ID exists
 				String dbPasswd = rs.getString("passwd");
-				if(dbPasswd.equals(passwd)) x = 1; // 비밀번호 일치 	
-				else x = 0; 					   // 비밀번호 불일치 
-			} else { // 아이디가 존재하지 않을 때 
+				if(dbPasswd.equals(passwd)) x = 1; // correct password	
+				else x = 0; 					   // incorrect password
+			} else { // ID does not exist
 				x = -1;
 			}
 		} catch(Exception e) {
@@ -91,9 +91,9 @@ public class MemberDBBean {
 		}
 		return x;
 	}
-	// 중복 아이디 체크
-	// x=1 : 이미 아이디 존재 			 -> 경고창 
-	// x=0 : 해당 아이디가 존재하지 않을 때  -> 회원가입 진행
+	// Duplicate ID check
+	// x=1 : ID exists			 -> warning 
+	// x=0 : ID does not exist  -> sign up process
 	
 	public int confirmId(String id) {
 		int x = 0;
@@ -104,7 +104,7 @@ public class MemberDBBean {
 			pstmt.setString(1, id);
 			rs = pstmt.executeQuery();
 			
-			if(rs.next()) x = 1; // 이미 해당 아이디 존재 
+			if(rs.next()) x = 1; // ID exist
 			else x = 0;
 			
 		} catch(Exception e) {
@@ -115,7 +115,7 @@ public class MemberDBBean {
 		return x;
 	}
 	
-	// 회원 조회(1명) 메소드 - 회원 개인이 조회할 때 
+	// Member Inquiry(check 1 person) Method - when member individual inquires
 	public MemberDataBean getMember(String id) {
 		MemberDataBean member = new MemberDataBean();
 		try {
@@ -144,7 +144,7 @@ public class MemberDBBean {
 		return member;
 	}
 	
-	// 회원 전체 조회 - 관리자가 사용 
+	// Entire member lookup - Used by admin
 	public List<MemberDataBean> getMembers(int start, int end) {
 		List<MemberDataBean> members = new ArrayList<MemberDataBean>();
 		MemberDataBean member = null;
@@ -178,12 +178,12 @@ public class MemberDBBean {
 		
 	
 	
-	// 회원 수정 메소드 - check : 1(회원 정보 수정), 0(수정 에러)
+	// Member Modification Method - check: 1 (Member Information Modification), 0(Error)
 	public int updateMember(MemberDataBean member) {
 		int check = 0;
 		try {
 			conn = getConnection();
-			sql = "update member set passwd=?, name=?, size=?, email=?, address=?, tel=? where id=?"; // 아이디에 따라 비번, 이름, 사이즈, 이메일, 주소, 번호 변경 
+			sql = "update member set passwd=?, name=?, size=?, email=?, address=?, tel=? where id=?"; // Change the password, name, size, email, address, number, depending on ID
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, member.getPasswd());
 			pstmt.setString(2, member.getName());
@@ -200,14 +200,14 @@ public class MemberDBBean {
 		}
 		return check;
 	}
-	// 회원 삭제(탈퇴) 메소드
-	// 회원 탈퇴 성공 : check = 1(아이디 존재, 비밀번호 일치)
-	// 회원 탈퇴 실패 : check = 0(아이디가 존재, 비밀번호 불일치), x = -1(아이디가 존재하지 않을 때)
+	// Member Deletion Method
+	// Deletion Success : check = 1(ID exists, correct password)
+	// Deletion Error : check = 0(ID exists, incorrect password), x = -1(ID does not exist)
 	public int deleteMember(String id, String passwd) {
 		int check = -1;
 		try {
 			conn = getConnection();
-			// 아이디에 해당하는 비밀번호 확인 
+			// Verify password for ID
 			sql = "select passwd from member where id = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, id);
