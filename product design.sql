@@ -1,18 +1,17 @@
--- < 쇼핑몰에 대한 전체 테이블 설계 >
 -- < table design for shopping mall >
--- 쇼핑몰 개발에 필요한 테이블 수 : 6 + 1개
+-- number of tables for designing web : 6 + 1
 -- member, manager, product, cart, buy, bank, board
--- member 테이블 : 회원(사용자) 정보에 대한 테이블 
--- manager 테이블 : 관리자 인증 테이블(상품 등록, 구매 관리, 회원 관리)
--- product 테이블 : 상품 정보에 관한 테이블  
--- cart 테이블 : 장바구니 정보에 관한 테이블 
--- buy 테이블 : 구매 상품 정보에 관한 테이블 
--- bank 테이블 : 은행(카드) 정보에 관한 테이블 
--- board 테이블 : 상품리뷰, QnA에 사용할 테이블 
+-- member table : information of members(users)
+-- manager(admin) table : product registration, purchase management, membership management
+-- product table : information of product 
+-- cart table : information of cart 
+-- buy table : information of purchase product 
+-- bank table : information of bank(card) 
+-- board table : product review and QnA
 
 -- ***************************************
--- 1. member 테이블 : 회원(사용자) 정보 테이블, 7개의 컬럼으로 구성
--- id(아이디), passwd(비밀번호), name(이름), reg_date(가입일자), address(주소), tel(전화번호), size(발사이즈)
+-- 1. member table : information of members(users), consisted of 7 columns
+-- ID, passwd(password), name, reg_date(registration day), address, tel(phone number), size(shoe size)
 use db01;
 show tables;
 
@@ -29,12 +28,12 @@ show tables;
 desc member;
 select * from member;
 
-insert into member values('aaaa1111', '1234', '이익준', now(), '서울시 마포구 양화로6길 6', '010-1111-1111', 9);
-insert into member values('bbbb2222', '1234', '김준완', now(), '인천시 남동구 정각로 29', '010-2222-2222', 11);
-insert into member values('cccc3333', '1234', '채송화', now(), '경기도 구리시 아차산로 439', '010-3333-3333', 7);
+insert into member values('aaaa1111', '1234', 'RM', now(), 'Sajik-ro-3-gil', '010-1111-1111', 9);
+insert into member values('bbbb2222', '1234', 'Jimin', now(), '104 Dosan-daero', '010-2222-2222', 11);
+insert into member values('cccc3333', '1234', 'V', now(), '38 Gadal 1-ro', '010-3333-3333', 7);
 
--- 2. admin 테이블 : 관리자 인증 테이블, 2개 컬럼 구성 
--- adminId(관리자 아이디), adminPasswd(관리자 비밀번호)
+-- 2. admin table : 2 columns 
+-- adminId(admin ID), adminPasswd(admin Password)
 
 create table admin(
 adminId varchar(50) primary key,
@@ -49,11 +48,11 @@ select * from admin;
 insert into admin values('admin', '1234');
 select * from admin;
 
--- 3. product 테이블 : 상품 정보 테이블, 가장 중요한 테이블, 12개 컬럼으로 구성 
--- 상품(신발) 정보에 대한 테이블  
--- product_id(상품 아이디), product_brand(신발 브랜드), product_name(상품이름), product_price(상품 가격, $), 
--- product_count(상품 재고 수량), product_size(상품 사이즈), product_date(출시일),
--- product_image(상품 이미지), product_detail1(상품 디테일 이미지1), product_detail2(상품 디테일 이미지2), product_detail3(상품 디테일 이미지3), product_description(상품 설명)
+-- 3. product table : information of product, most important table, consisted of 12 columns
+-- product(shoes) information
+-- product_id(product ID), product_brand(Brand of shoes), product_name(name of product), product_price(price of product, $), 
+-- product_count(number of products), product_size(product size), product_date(release date of product),
+-- product_image(product image), product_detail1(product detail image1), product_detail2(product detail image2), product_detail3(product detail image3), product_description(product description)
 
 create table test (
 product_id bigint primary key auto_increment,
@@ -74,8 +73,8 @@ drop table test;
 show tables;
 select * from test;
 
--- 4. bank 테이블 : 은행(결제 카드) 정보 테이블, 4개 컬럼으로 구성 
--- card_no(카드번호), card_com(카드회사), member_id(사용자 아이디), member_name(사용자 이름)
+-- 4. bank table : information of bank(card) , consisted of 4 columns 
+-- card_no(card number), card_com(card company), member_id(member ID), member_name(name of member)
 create table bank (
 card_no varchar(19) not null,
 card_com varchar(20) not null,
@@ -89,13 +88,13 @@ show tables;
 desc bank;
 select * from bank;
 
-insert into bank values('9876-4569-3652-4569', '기업은행', 'aaaa1111', '이익준');
+insert into bank values('9876-4569-3652-4569', 'Industrial Bank of Korea', 'aaaa1111', 'RM');
 select * from bank;
 
--- 5. cart 테이블 : 장바구니 테이블, 7개 컬럼으로 구성 
--- cart_id(장바구니 번호), buyer(구매자, member 테이블의 id), product_id(상품번호, product 테이블의 product_id),
--- product_name(상품 제목, product 테이블의 product_name), product_size(상품 사이즈, product 테이블의 product_size), buy_price(구매가격), buy_count(구매수량),
--- product_image(product 테이블의 product_image)
+-- 5. cart table : information of cart, consisted of 7 columns 
+-- cart_id(cart number), buyer(buyer, ID of member table), product_id(product number, product table's product_id),
+-- product_name(product name, product table's product_name), product_size(product size, product table's product_size), buy_price(price of product), buy_count(count),
+-- product_image(product table's product_image)
 
 create table cart(
 cart_id int primary key auto_increment,
@@ -112,11 +111,11 @@ show tables;
 desc cart;
 select * from cart;
 
--- 6. buy 테이블 : 구매 정보 테이블, 13개 컬럼으로 구성 
--- buy_id(구매번호), buyer(구매자, member 테이블의 id), product_id(상품번호, product 테이블의 product_id),
--- product_name(상품이름, product 테이블의 product_name), item_size(상품 사이즈, product 테이블의 product_size), buy_price(구매 가격), buy_count(구매수량),
--- product_image(상품 이미지, product 테이블의 product_image), buy_date(구매일자), account(결제정보, 은행, 카드),
--- delivery_name(수령인 이름), delivery_tel(수령인 전화번호), delivery_address(수령인 주소), delivery_state(배송상태)
+-- 6. buy table : information of purchase product, consisted of 13 columns  
+-- buy_id(order number), buyer(buyer, member table's id), product_id(product number, product table's product_id),
+-- product_name(product namee, product table's product_name), item_size(product size, product table's product_size), buy_price(product price), buy_count(count),
+-- product_image(product image, product table's product_image), buy_date(date of purchase), account(information of purchase, bank, card),
+-- delivery_name(name of package recipient), delivery_tel(recipient's number), delivery_address(recipient address), delivery_state(state of delivery)
 
 create table buy(
 buy_id bigint primary key auto_increment,
