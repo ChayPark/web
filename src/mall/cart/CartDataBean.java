@@ -1,14 +1,14 @@
 package mall.cart;
 
 public class CartDataBean {
-	private int cart_id; // 카트 아이디
-	private String buyer; // 구매자(회원 아이디)
-	private int product_id; // 상품 아이디
-	private String product_title; // 상품 제목
-	private int product_size; // 상품 사이즈
-	private int buy_price; // 판매가(할인율 적용)
-	private int buy_count; // 구매 수량
-	private String product_image; // 상품 이미지
+	private int cart_id; // cart ID
+	private String buyer; // buyer(user ID)
+	private int product_id; // product ID
+	private String product_title; // product name(title)
+	private int product_size; // product size
+	private int buy_price; // price
+	private int buy_count; // count
+	private String product_image; // product image
 
 	public int getCart_id() {
 		return cart_id;
