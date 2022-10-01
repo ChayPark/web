@@ -11,15 +11,14 @@ import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 public class ProductDBBean {
-	// JDBC에서 사용할 객체 변수 선언
 	// declare the objects for JDBC(Java Database Connectivity)
 	private Connection conn = null;
 	private PreparedStatement pstmt = null;
 	private ResultSet rs = null;
 	private String sql = "";
 	
-	// singleton pattern 적용
-	// singleton pattern 사용이유: 사용할 때 마다 인스턴스가 생성되는 것을 막기 위해 static 사용하여 하나의 인스턴스를 외부에서 사용하게 함.
+	// singleton pattern
+	// why I used singleton pattern ?: Use one instance externally using static to prevent an instance from being created each time it is used.
 	private ProductDBBean() {}
 	
 	private static ProductDBBean instance = new ProductDBBean();
@@ -28,8 +27,8 @@ public class ProductDBBean {
 		return instance;
 	}
 	
-	// connection pool 사용
-	// DBCP(DataBase Connection Pool) 연동을 위한 메소드
+	// connection pool
+	// DBCP(DataBase Connection Pool) method
 	private Connection getConnection() throws Exception {
 		Context initCtx = new InitialContext();
 		Context envCtx = (Context)initCtx.lookup("java:comp/env");
@@ -37,17 +36,17 @@ public class ProductDBBean {
 		return ds.getConnection();
 	}
 	
-	// JDBC에서 사용할 객체(Connection, PreparedStatement, ResultSet) 닫기
+	// Object for JDBC(Connection, PreparedStatement, ResultSet) 
 	private void close() {
 		if(rs != null) try {rs.close();} catch(Exception e) {e.printStackTrace();}
 		if(pstmt != null) try {pstmt.close();} catch(Exception e) {e.printStackTrace();}
 		if(conn != null) try {conn.close();} catch(Exception e) {e.printStackTrace();}
 	}
 	
-	// 관리자 인증 메소드
-	// x: 1 - 아이디가 존재하고 비밀번호가 일치
-	// x: 0 - 아이디가 존재하지만 비밀번호가 불일치
-	// x: -1 - 아이디가 존재하지 않을 때
+	// Method of admin(manager) 
+	// x: 1 - ID exists, and correct password
+	// x: 0 - ID exists, but incorrect password
+	// x: -1 - ID does not exist 
 	public int managerCheck(String managerId, String managerPasswd) { 
 		String dbPasswd = "";
 		int x = -1;
@@ -60,8 +59,8 @@ public class ProductDBBean {
 			
 			if(rs.next()) { // 아이디가 존재할 때 
 				dbPasswd = rs.getString("managerPasswd");
-				if(dbPasswd.equals(managerPasswd)) x = 1; // 비밀번호 일치
-				else x = 0;                               // 비밀번호 불일치
+				if(dbPasswd.equals(managerPasswd)) x = 1; // correct password 
+				else x = 0;                               // incorrect password 
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -71,7 +70,7 @@ public class ProductDBBean {
 		return x;
 	}
 	
-	// 상품 등록 메소드
+	// Method of product registration
 	public void insertProduct(ProductDataBean product) { 
 		try {
 			conn = getConnection();
@@ -98,15 +97,15 @@ public class ProductDBBean {
 		}
 	}
 	
-	// 전체 상품수 또는 분류별 전체 상품 수를 얻는 메소드
+	// Method of total number of products or obtaining the total number of products by classification 
 	public int getProductCount(String product_brand) { 
 		int count = 0;
 		try {
 			conn = getConnection();
-			if(product_brand.equals("all")) { // 전체 상품 수
+			if(product_brand.equals("all")) { 			 // total number of products 
 				sql = "select count(*) from product";
 				pstmt = conn.prepareStatement(sql);
-			} else { 						 // 분류별 상품 수 
+			} else { 						 // total number of products by classification
 				sql = "select count(*) from product where product_brand = ?";
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1, product_brand);
@@ -122,15 +121,15 @@ public class ProductDBBean {
 		return count;
 	}
 	
-	// 전체 상품수 또는 분류별 전체 상품 수를 얻는 메소드 (shopAll용)
+	// Method of total number of products or obtaining the total number of products by classification (For shopAll)
 		public int getProductCount1(String product_brand) { 
 			int count = 0;
 			try {
 				conn = getConnection();
-				if(product_brand.equals("all")) { // 전체 상품 수
+				if(product_brand.equals("all")) { // total number of products
 					sql = "select count(*) from product where product_size = 7";
 					pstmt = conn.prepareStatement(sql);
-				} else { 						 // 분류별 상품 수 
+				} else { 						 // total number of products by classification  
 					sql = "select count(*) from product where product_brand = ?, product_size = 7";
 					pstmt = conn.prepareStatement(sql);
 					pstmt.setString(1, product_brand);
@@ -146,20 +145,20 @@ public class ProductDBBean {
 			return count;
 		}
 	
-	//  전체 상품 또는 상품 분류별 상품의 정보를 얻는 메소드(productList 용)
-	// product_brand: Nike, Adidas, Air Jordan, Yeezy, Collaboration, all(전체 상품)
+	// Method of obtaining information about the entire product or product by classification(For productList)
+	// product_brand: Nike, Adidas, Air Jordan, Yeezy, Collaboration, all
 	public List<ProductDataBean> getProducts(String product_brand, int start, int end) { 
 		List<ProductDataBean> productList = new ArrayList<ProductDataBean>();
 		ProductDataBean product = null;
 		try {
 			conn = getConnection();
-			// limit ?, ? - 몇번부터 몇개, 0번부터 시작 
-			if(product_brand.equals("all")) { // 전체 상품
+			// limit ?, ? - From what number to what number, start from zero
+			if(product_brand.equals("all")) { // entire product
 				sql = "select * from product order by product_date desc limit ?, ?";
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setInt(1, start-1);
 				pstmt.setInt(2, end);
-			} else {    // 분류별 상품 (Nike, Adidas, Air Jordan, Yeezy, Collaboration, all(전체 상품))  
+			} else {    // product by classification (Nike, Adidas, Air Jordan, Yeezy, Collaboration, all(entire product))  
 				sql = "select * from product where product_brand = ? order by product_date desc limit ?, ?";
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1, product_brand);
@@ -170,7 +169,7 @@ public class ProductDBBean {
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				// product_description를 제외한 12개 필드
+				// 12 fields except product_description
 				product = new ProductDataBean();
 				product.setProduct_id(rs.getInt("product_id"));
 				product.setProduct_brand(rs.getString("product_brand"));
@@ -193,20 +192,20 @@ public class ProductDBBean {
 		}
 		return productList;
 	}
-	//  전체 상품 또는 상품 분류별 상품의 정보를 얻는 메소드(shopAll용)
-	// product_brand: Nike, Adidas, Air Jordan, Yeezy, Collaboration, all(전체 상품)
+	//  Method of obtaining information about the entire product or product by classification(for shopAll)
+	// product_brand: Nike, Adidas, Air Jordan, Yeezy, Collaboration, all(entire product)
 	public List<ProductDataBean> getProducts1(String product_brand, int start, int end) { 
 		List<ProductDataBean> productList = new ArrayList<ProductDataBean>();
 		ProductDataBean product = null;
 		try {
 			conn = getConnection();
-			// limit ?, ? - 몇번부터 몇개, 0번부터 시작 
-			if(product_brand.equals("all")) { // 전체 상품
+			// limit ?, ? - From what number to what number, start from zero
+			if(product_brand.equals("all")) { // entire product
 				sql = "select * from product where product_size=7 order by product_date desc limit ?, ?";
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setInt(1, start-1);
 				pstmt.setInt(2, end);
-			} else {    // 분류별 상품 (Nike, Adidas, Air Jordan, Yeezy, Collaboration, all(전체 상품))  
+			} else {    // product by classification(Nike, Adidas, Air Jordan, Yeezy, Collaboration, all(entire product))  
 				sql = "select * from product where product_brand = ? and product_size=7 order by publishing_date desc, product_model limit ?, ?";
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1, product_brand);
@@ -217,7 +216,7 @@ public class ProductDBBean {
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				// product_description를 제외한 12개 필드
+				// 12 fields except product_description
 				product = new ProductDataBean();
 				product.setProduct_id(rs.getInt("product_id"));
 				product.setProduct_brand(rs.getString("product_brand"));
@@ -241,13 +240,13 @@ public class ProductDBBean {
 		return productList;
 	}
 	
-	// 메인 페이지에 나타낼  분류별 신상품 목록을 몇개(3개, 5개...)를 얻는 메소드
+	// Method for obtaining several new product lists by classification to appear on the main page
 	public List<ProductDataBean> getProducts(String product_brand, int count) { 
 		List<ProductDataBean> productList = new ArrayList<ProductDataBean>();
 		ProductDataBean product = null;
 		try {
 			conn = getConnection();
-			// 분류별로 product_date(출시일)를 기준으로 내림차순하여 1개를 조회하여 얻음.
+			// It is obtained by inquiring one by descending based on product_date (release date) for each classification
 			sql = "select * from product where product_brand = ? and product_size = 7 order by product_date desc limit ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, product_brand);
@@ -255,7 +254,7 @@ public class ProductDBBean {
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				// product_description을 제외한 12개 필드
+				// 12 fields except product_description
 				product = new ProductDataBean();
 				product.setProduct_id(rs.getInt("product_id"));
 				product.setProduct_brand(rs.getString("product_brand"));
@@ -279,19 +278,19 @@ public class ProductDBBean {
 		return productList;
 	}
 	
-	// 메인 페이지에 나타낼  분류별 추천상품을 1건 얻는 메소드 -> 분류별 인기상품 1건 
+	// Method of obtaining 1 recommended product by classification to be displayed on the main page -> 1 popular product by classification
 	public List<ProductDataBean> getProducts() { 
 		List<ProductDataBean> productList = new ArrayList<ProductDataBean>();
 		ProductDataBean product = null;
 		try {
 			conn = getConnection();
-			// 분류별로 그룹하여  product_count(수량)를 기준으로 오름차순하여 각 분류별로 1개를 조회하여 얻음.
+			// Grouped by classification, in ascending order based on product_count(quantity), and obtained by inquiring one for each classification.
 			sql = "select * from product group by product_brand order by product_count desc";
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 				
 			while(rs.next()) {
-				// product_content를 제외한 11개 필드
+				// 11 fields except product_content
 				product = new ProductDataBean();
 				product.setProduct_id(rs.getInt("product_id"));
 				product.setProduct_brand(rs.getString("product_brand"));
@@ -315,8 +314,8 @@ public class ProductDBBean {
 		return productList;
 	}
 	
-	// 상품 1개 정보를 얻는 메소드(상세 보기)
-	// product_content를 포함한 12개 필드 정보
+	// Method of obtaining 1 product information (see details)
+	// 12 fields include product_content
 	public ProductDataBean getProduct(int product_id) { 
 		ProductDataBean product = new ProductDataBean();
 		try {
@@ -340,7 +339,7 @@ public class ProductDBBean {
 				product.setProduct_detail1(rs.getString("product_detail1"));
 				product.setProduct_detail2(rs.getString("product_detail2"));
 				product.setProduct_detail3(rs.getString("product_detail3"));
-				product.setProduct_description(rs.getString("product_description")); // 상품 설명
+				product.setProduct_description(rs.getString("product_description")); // product description
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -350,7 +349,7 @@ public class ProductDBBean {
 		return product;
 	}
 	
-	// 상품 정보 수정 메소드
+	// Method of product information modification 
 	public void updateProduct(ProductDataBean product) { 
 		try {
 			conn = getConnection();
@@ -379,7 +378,7 @@ public class ProductDBBean {
 		}
 	}
 	
-	// 상품 삭제 메소드
+	// Method of delete product
 	public void deleteProduct(int product_id) { 
 		try {
 			conn = getConnection();
