@@ -2,7 +2,7 @@
 -- number of tables for designing web : 6 + 1
 -- member, manager, product, cart, buy, bank, board
 -- member table : information of members(users)
--- manager(admin) table : product registration, purchase management, membership management
+-- manager(admin) table : manager ID and Password (product registration, purchase management, membership management)
 -- product table : information of product 
 -- cart table : information of cart 
 -- buy table : information of purchase product 
