@@ -11,13 +11,13 @@ import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 public class CartDBBean {
-	// JDBC 객체 변수 - DB 연동
+	// JDBC object variables - DB conncection
 	private Connection conn = null;
 	private PreparedStatement pstmt = null;
 	private ResultSet rs = null;
 	private String sql = "";
 	
-	// Singleton Pattern 설정
+	// Singleton Pattern 
 	private CartDBBean() {}
 	
 	private static CartDBBean instance = new CartDBBean();
@@ -26,7 +26,7 @@ public class CartDBBean {
 		return instance;
 	}
 
-	// Connection Pool 설정
+	// Connection Pool 
 	private Connection getConnection() throws Exception {
 		Context initCtx = new InitialContext();
 		Context envCtx = (Context)initCtx.lookup("java:comp/env");
@@ -34,39 +34,39 @@ public class CartDBBean {
 		return ds.getConnection();
 	}
 	
-	// JDBC 객체 변수 해제
+	// JDBC object variable close
 	private void close() {
 		try {if(rs != null) rs.close();} catch(Exception e) { e.printStackTrace();} 
 		try {if(pstmt != null) pstmt.close();} catch(Exception e) { e.printStackTrace();} 
 		try {if(conn != null) conn.close();} catch(Exception e) { e.printStackTrace();} 
 	}
 	
-	// 카트 추가 - 동일한 상품에 대해서는 구매수량 증가
+	// Add carts - Increase purchase count for the same product
 	public int insertCart(CartDataBean cart) {
-		System.out.println("===> insertCart() 메소드");
-		int x = 0; // 쿼리 성공 여부
-		boolean check = false; // 동일 상품 체크 변수
-		int b_count = 0;       // 동일 상품 추가 구매 수량
+		System.out.println("===> insertCart() method");
+		int x = 0; // check query success or not
+		boolean check = false; // Check for the same productt
+		int b_count = 0;       // additional purchase count of the same product
 		
 		try {
 			conn = getConnection();
 			
-			// 동일한 상품에 대한 체크
+			// Check for the same product
 			sql = "select * from cart where buyer = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, cart.getBuyer());
 			rs = pstmt.executeQuery();
 			
-			// 동일한 상품이 존재할 때의 체크
+			// Check when the same product exists
 			while(rs.next()) {
 				if(rs.getInt("product_id") == cart.getProduct_id()) {
 					check = true;
-					b_count = rs.getInt("buy_count"); // 동일 상품에 대한 카트 테이블 구매 수량을 획득
+					b_count = rs.getInt("buy_count"); // Add the number of cart table purchases for the same product
 				}
 			}
 			
-			// 동일한 상품 유무에 따른 카트 처리
-			if(check == true) { // 카트에 동일한 상품이 있을 때 - update
+			// Cart Processing according to the Same Products
+			if(check == true) { // If the same goods has in cart - update
 				sql = "update cart set buy_count=?, product_size=? where product_id=? and buyer=?";
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setInt(1, b_count+cart.getBuy_count());
@@ -74,7 +74,7 @@ public class CartDBBean {
 				pstmt.setString(3, cart.getBuyer());
 				pstmt.setInt(4, cart.getProduct_size());
 				x = pstmt.executeUpdate();
-			} else {            // 카트에 동일한 상품이 없을 때 - insert
+			} else {            // If the same goods has not in cart - insert
 				sql = "insert into cart(buyer, product_id, product_title, product_size, buy_price, buy_count, product_image) "
 						+ "values(?, ?, ?, ?, ?, ?, ?)";
 				pstmt = conn.prepareStatement(sql);
@@ -95,9 +95,9 @@ public class CartDBBean {
 		return x;
 	}
 	
-	// 카트 상품 수 확인 - 구매자에 대한 
+	// Checking the number of cart products - about the buyer
 	public int getCartCount(String buyer) {
-		System.out.println("===> getCartCount() 메소드");
+		System.out.println("===> getCartCount() method");
 		int count = 0;
 		try {
 			conn = getConnection();
@@ -115,9 +115,9 @@ public class CartDBBean {
 		}
 		return count;
 	}
-	// 카트 목록 확인 (전체 목록) - 구매자에 대한 
+	// Check Cart List (entire list) - for buyers
 	public List<CartDataBean> getCartList(String buyer) {
-		System.out.println("===> getCartList() 메소드");
+		System.out.println("===> getCartList() method");
 		List<CartDataBean> cartList = new ArrayList<CartDataBean>();
 		CartDataBean cart = null;
 		try {
@@ -146,7 +146,7 @@ public class CartDBBean {
 		}
 		return cartList;
 	}
-	// 카트 정보 수정 (구매 수량만 수정) - 재고 수량과 비교하여 동일하거나 작을 때만 증가
+	// Cart information modification (just modified purchase count) - increases the count when the product counts in the cart is the same or less than inventory count
 	public void updateCart(int cart_id, int buy_count, int product_size, int p_one_price) {
 		try {
 			conn = getConnection();
@@ -163,8 +163,8 @@ public class CartDBBean {
 			close();
 		}
 	}
-	// 카트 삭제 - 3가지 방법(1개, 선택한 상품, 전체)
-	// 카트 1개 상품 삭제 
+	// Cart Deletion - 3 ways(one, selected product, entire)
+	// Delete one product in cart
 	public void deleteCart(int cart_id) {
 		try {
 			conn = getConnection();
