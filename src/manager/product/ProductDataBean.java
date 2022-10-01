@@ -2,10 +2,10 @@ package manager.product;
 
 
 /*
--- 3. product 테이블 : 상품 정보 테이블, 가장 중요한 테이블, 13개의 컬럼으로 구성
--- product_id(상품 아이디), product_brand(상품 브랜드), product_model(컬렉션), product_title(상품 이름), product_price(상품 가격), 
--- product_count(상품 재고 수량), product_size(상품 사이즈), product_date(출시일),
--- product_image(상품 이미지), product_detail1(상품 디테일1), product_detail2(상품 디테일2), product_detail3(상품 디테일3), product_description(상품 설명)
+-- 3. product table : information of product, most important table, consisted of 13 columns
+-- product_id(product ID), product_brand(Brand of shoes), product_model(collection), product_name(name of product), product_price(price of product, $), 
+-- product_count(number of products), product_size(product size), product_date(release date of product),
+-- product_image(product image), product_detail1(product detail image1), product_detail2(product detail image2), product_detail3(product detail image3), product_description(product description)
 */
 public class ProductDataBean {
 	private int product_id;
