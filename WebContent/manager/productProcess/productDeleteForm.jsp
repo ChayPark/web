@@ -4,17 +4,17 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>상품 삭제 폼 페이지</title>
+<title>Product Deleation Form Page</title>
 </head>
 <body>
 
 <%
 String managerId = (String)session.getAttribute("managerId");
-//managerId에 대한 세션값이 없을 때(로그인하지 않았을 때)
+//When there is no session value for managerId (when not login)
 if(managerId == null) {
 	response.sendRedirect("../logon/managerLoginForm.jsp");
 }
-//managerId에 대한 세션값이 있을 때(로그인하였을 때)
+//When there is session value for managerId (when login)
 
 
 int product_id = Integer.parseInt(request.getParameter("product_id"));
@@ -22,7 +22,7 @@ String product_brand = request.getParameter("product_brand");
 String pageNum = request.getParameter("pageNum");
 %>
 <script>
-var choice = confirm("선택한 상품을 삭제하시겠습니까?");
+var choice = confirm("Would you like to delete this product?");
 
 if(choice) location="productDeletePro.jsp?product_id=<%=product_id%>&product_brand=<%=product_brand%>&pageNum=<%=pageNum%>";
 else history.back(); 
