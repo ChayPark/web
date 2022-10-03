@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>상품 목록 전체 보기</title>
+<title>View the entire list of products</title>
 <style>
 #container { width: 1200px; margin: 20px auto; font-size: 0.8em;}
 h2 { text-align: center; border-radius: 5em; padding: 0.5em; background: #9db5e8; color: white; font-size: 2em;}
@@ -33,15 +33,6 @@ window.onload = function() {
 	var p_brand = document.getElementById("product_brand");
 	p_brand.addEventListener("change", function() {
 		location = 'productList.jsp?product_brand=' + p_brand.value + '&pageNum=1';
-		
-		// 반복문 동작 여부 확인(작동 안됨)
-		/*
-		for(var i=0; i<p_kind.options.length; i++) {
-			if(p_kind.options[i].value == p_value) {
-				p_kind.options[i].selected = true;
-			}
-		}
-		*/
 	})
 	
 }
@@ -64,96 +55,96 @@ function changeDeleteIconOff(obj) {
 <body>
 <%
 String managerId = (String)session.getAttribute("managerId");
-// 로그인하지 않았을 때
+// Not log-in
 if(managerId == null) {
 	response.sendRedirect("../logon/managerLoginForm.jsp");	
 }
-// 로그인하였을 때
+// log-in
 String product_brand = request.getParameter("product_brand");
 String product_model = request.getParameter("product_model");
 if(product_brand == null) product_brand = "all";
 DecimalFormat df = new DecimalFormat("#,###,###");
 List<ProductDataBean> productList = null;
-int number = 0; // 상번 번호(1씩 증가하는)
+int number = 0; // Product number(increased by 1)
 
-// 상품 분류별 구분
-// product_brand : nike(나이키), adidas(아디다스), jordan(조던), yeezy(이지부스트), Collaboration(콜라보), all(전체 상품) 문자열
+// classification by product classification
+// product_brand : nike, adidas, jordan, yeezy, Collaboration, all(entire products)
 String product_brandName = "";
 switch(product_brand) {
-case "NIKE": product_brandName = "나이키"; break;
-case "ADIDAS": product_brandName = "아디다스"; break;
-case "JORDAN": product_brandName = "에어 조던"; break;
-case "YEEZY": product_brandName = "이지부스트"; break;
-case "COLLAB": product_brandName = "콜라보"; break;
-case "all": product_brandName = "전체"; break;
+case "NIKE": product_brandName = "Nike"; break;
+case "ADIDAS": product_brandName = "Adidas"; break;
+case "JORDAN": product_brandName = "Air Jordan"; break;
+case "YEEZY": product_brandName = "Yeezy Boost"; break;
+case "COLLAB": product_brandName = "Collaboration"; break;
+case "all": product_brandName = "Entire products"; break;
 }
 
 ///////////////////////////////////////////////////////////////////////
-// paging 처리를 위한 변수 
-int pageSize = 10; // 1page에 10개의 상품을 보여줌 
+// variable for paging
+int pageSize = 10; // showing the 10 products for each page
 String pageNum = request.getParameter("pageNum");
 if(pageNum == null) pageNum = "1";
 
-int currentPage = Integer.parseInt(pageNum);	 // 현재 페이지
-int startRow = (currentPage - 1) * pageSize + 1; // 현재 페이지에서 보여줄 첫번째 행 
-int endRow = currentPage * pageSize; 			 // 현재 페이지에서 마지막 행 
+int currentPage = Integer.parseInt(pageNum);	 // current page
+int startRow = (currentPage - 1) * pageSize + 1; // first row for current page 
+int endRow = currentPage * pageSize; 			 // last row for current page 
 
-// 등록된 상품이 있을 때, 등록된 상품 10개를 ArrayList에 받아둔다.
-//limit startRow, pageSize(10건으로 설정)
-//DB 연동, 전체 상품수 조회
+// When there are registered products, 10 registered products are received in ArrayList.
+//limit startRow, pageSize(10)
+//DB link, total product number inquiry
 ProductDBBean dbPro = ProductDBBean.getInstance();
-int count = dbPro.getProductCount(product_brand); // 전체 상품 수 또는 분류별 전체 상품수 
+int count = dbPro.getProductCount(product_brand); // Total number of goods or total number of goods by classification
 
 if(count > 0) productList = dbPro.getProducts(product_brand, startRow, pageSize); 
 
-number = count - (currentPage-1)*pageSize;// 전체 글 수의 역순 번호 
+number = count - (currentPage-1)*pageSize;// reverse number of total number of texts
 
 %>
-<%-- 상품 분류
-product_brand : nike(나이키), adidas(아디다스), jordan(조던), yeezy(이지부스트), Collaboration(콜라보), all(전체 상품) 문자열
+<%-- product classification
+product_brand : nike, adidas, jordan, yeezy, Collaboration, all(entire products)
 
 --%>
 <div id="container">
-	<h2><%=product_brandName %> 상품 목록 (<span><%=count %>개</span>)</h2>
+	<h2><%=product_brandName %> Product List (<span><%=count %>qty</span>)</h2>
 	<p>	
-		상품 분류 선택 : 
+		product classification selection : 
 		<select name="product_brand" id="product_brand">
-			<option value="all" <%if(product_brand.equals("all")) {%> selected <%} %>>전체</option>
-			<option value="NIKE" <%if(product_brand.equals("NIKE")) {%> selected <%} %>>나이키</option>
-			<option value="ADIDAS" <%if(product_brand.equals("ADIDAS")) {%> selected <%} %>>아디다스</option>
-			<option value="JORDAN" <%if(product_brand.equals("JORDAN")) {%> selected <%} %>>조던</option>
-			<option value="YEEZY" <%if(product_brand.equals("YEEZY")) {%> selected <%} %>>이지</option>
-			<option value="COLLAB" <%if(product_brand.equals("COLLAB")) {%> selected <%} %>>콜라보</option>
+			<option value="all" <%if(product_brand.equals("all")) {%> selected <%} %>>ALL</option>
+			<option value="NIKE" <%if(product_brand.equals("NIKE")) {%> selected <%} %>>NIKE</option>
+			<option value="ADIDAS" <%if(product_brand.equals("ADIDAS")) {%> selected <%} %>>ADIDAS</option>
+			<option value="JORDAN" <%if(product_brand.equals("JORDAN")) {%> selected <%} %>>JORDAN</option>
+			<option value="YEEZY" <%if(product_brand.equals("YEEZY")) {%> selected <%} %>>YEEZY</option>
+			<option value="COLLAB" <%if(product_brand.equals("COLLAB")) {%> selected <%} %>>COLLAB</option>
 		</select>&nbsp;&nbsp;&nbsp;
-		<input type="button" value="상품 등록" onclick="location='productRegisterForm.jsp'">
+		<input type="button" value="Product Registeration" onclick="location='productRegisterForm.jsp'">
 	</p>
 	<table>
 		<tr>
-			<th width="7%">번호</th>
-			<th width="5%">브랜드</th>
-			<th width="12%">컬렉션</th>
-			<th width="21%">상품 이름</th>
-			<th width="12%">상품 이미지</th>
-			<th width="8%">가격</th>
-			<th width="7%">수량</th>
-			<th width="7%">사이즈</th>
-			<th width="13%">출시일</th>
-			<th width="17%"><small>수정/삭제</small></th>
+			<th width="7%">NO</th>
+			<th width="5%">BRAND</th>
+			<th width="12%">COLLECTION</th>
+			<th width="21%">PRODUCT NAME</th>
+			<th width="12%">PRODUCT IMAGE</th>
+			<th width="8%">PRICE</th>
+			<th width="7%">QTY</th>
+			<th width="7%">SIZE</th>
+			<th width="13%">REALEASE DATE</th>
+			<th width="17%"><small>MODIFICATION/DELETION</small></th>
 		</tr>
 		<%
 		if(count == 0) { 
-			out.print("<tr><td colspan='12' class='center'>등록된 상품이 없습니다.</td></tr>");
+			out.print("<tr><td colspan='12' class='center'>No registered product exists.</td></tr>");
 		} else {
 			for(ProductDataBean product : productList) {
 				int p_id = product.getProduct_id();
 				String p_brand = product.getProduct_brand();
 				switch(p_brand) {
-				case "NIKE": product_brandName = "나이키"; break;
-				case "ADIDAS": product_brandName = "아디다스"; break;
-				case "JORDAN": product_brandName = "조던"; break;
-				case "YEEZY": product_brandName = "이지"; break;
-				case "COLLAB": product_brandName = "콜라보"; break;
-				case "all": product_brandName = "전체"; break;
+				case "NIKE": product_brandName = "NIKE"; break;
+				case "ADIDAS": product_brandName = "ADIDAS"; break;
+				case "JORDAN": product_brandName = "JORDAN"; break;
+				case "YEEZY": product_brandName = "YEEZY"; break;
+				case "COLLAB": product_brandName = "COLLAB"; break;
+				case "all": product_brandName = "ALL"; break;
 				}
 				
 		%>
@@ -166,7 +157,7 @@ product_brand : nike(나이키), adidas(아디다스), jordan(조던), yeezy(이
 			<td class="center">
 				<a href="productContent.jsp?product_id=<%=p_id%>&product_brand=<%=p_brand%>&pageNum=<%=pageNum%>"><img src=<%="/images_shoes21/" + product.getProduct_image() %> width="40"></a></td>
 			<td class="right"><%=df.format(product.getProduct_price()) %>$</td>
-			<td class="right"><%=df.format(product.getProduct_count()) %>개</td>
+			<td class="right"><%=df.format(product.getProduct_count()) %>qty</td>
 			<td class="center"><%=product.getProduct_size() %></td>
 			<td class="center"><%=product.getProduct_date() %></td>
 			<td class="center">
@@ -185,37 +176,37 @@ product_brand : nike(나이키), adidas(아디다스), jordan(조던), yeezy(이
 <div id="paging">
 	
 <%
-// 페이징 처리 
-// count : 전체 상품 수, kind_count : 전체 상품수 또는 분류별 상품 수
+// Paging
+// count : total number of products, kind_count : Total number of products or number of products by classification
 if(count > 0) {
-	int pageCount = count / pageSize + (count%pageSize == 0 ? 0 : 1); // 전체 페이지 수 
-	int startPage = 1;  // 시작 페이지 번호 
-	int pageBlock = 10; // 페이징의 개수 
+	int pageCount = count / pageSize + (count%pageSize == 0 ? 0 : 1); // Total page number
+	int startPage = 1;  // start page number
+	int pageBlock = 10; // number of paging
 	
-	// 시작페이지 설정
+	// start page setting
 	if(currentPage % 10 != 0) startPage = (int)(currentPage/10)*10 + 1;
 	else startPage = (int)(currentPage/10-1)*10 + 1;
 	
-	// 끝페이지 설정 
+	// end page setting
 	int endPage = startPage + pageBlock - 1;
 	if(endPage > pageCount) endPage = pageCount;
 	
-	// 이전 페이지 처리 
+	// previous page 
 	if(startPage > 10) {
 		out.print("<a href='productList.jsp?product_brand="+product_brand+"&pageNum="+(startPage-10)+"'><div id='pbox'>◀</div></a>");
 	}
 	
-	// 페이징 블록 처리 -> 현재 페이지 하이퍼링크 없애기 
+	// Paging block processing -> Get rid of the current page hyperlink
 	for(int i=startPage; i<=endPage; i++) {
-		if(i == currentPage) { // i가 현재 페이지 일 때(이동이 되지 않음) 
+		if(i == currentPage) { // When i is the current page (not moved) 
 			out.print("<div id='pbox' class='pbox_current'>"+i +"</div>");
-		} else { // i가 현재 페이지가 아닐 때(이동함)
+		} else { // When i is not the current page (move)
 			out.print("<a href='productList.jsp?product_brand="+product_brand+"&pageNum="+i+"'><div id='pbox'>" + i + "</div></a>");
 		}
 		
 		
 	}
-	// 다음 페이지에 관한 처리 
+	// Processing for the next page
 	if(endPage < pageCount) {
 		out.print("<a href='productList.jsp?product_brand="+product_brand+"&pageNum="+(startPage+10) + "'><div id='pbox'>▶</div></a>");
 	}
