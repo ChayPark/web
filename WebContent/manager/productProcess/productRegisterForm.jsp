@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>상품 등록 폼 페이지</title>
+<title>Product Registration Form Page</title>
 <style>
 #container { width: 500px; margin: 20px auto;}
 h3 { text-align: center; border-radius: 15px 15px 0 0; border-bottom: 2px solid #cdc8da; padding: 0.5em; background: #b8d6f0;}
@@ -28,55 +28,55 @@ window.onload = function() {
 	registerBtn.addEventListener("click", function() {
 		var form = document.registerForm;
 		
-		// product_brand(select로 기본값이 선택), product_model(select), id 
-		// 3개를 제외한 10개 항목에 대한 유효성 검사
+		// product_brand(select is default), product_model(select), id 
+		// Validity check for 10 items except 3 items
 		if(!form.product_title.value) {
-			alert('상품 제목을 입력하시오.');
+			alert('Enter the title of the product.');
 			form.product_title.focus();
 			return;
 		}
 		if(!form.product_price.value) {
-			alert('상품 가격을 입력하시오.');
+			alert('Please enter the price of the product.');
 			form.product_price.focus();
 			return;
 		}
 		if(!form.product_count.value) {
-			alert('상품 수량을 입력하시오.');
+			alert('Please enter the quantity of the product.');
 			form.product_count.focus();
 			return;
 		}
 		if(!form.product_size.value) {
-			alert('사이즈를 입력하시오.');
+			alert('Please enter a size.');
 			form.product_size.focus();
 			return;
 		}
 		if(!form.product_date.value) {
-			alert('출시일을 입력하시오.');
+			alert('Please enter the release date.');
 			form.product_date.focus();
 			return;
 		}
 		if(!form.product_image.value) {
-			alert('상품 대표 이미지를 선택하시오.');
+			alert('Select the product representative image.');
 			form.product_image.focus();
 			return;
 		}
 		if(!form.product_detail1.value) {
-			alert('상품 상세 이미지1을 선택하시오.');
+			alert('Select Product Detail Image 1.');
 			form.product_detail1.focus();
 			return;
 		}
 		if(!form.product_detail2.value) {
-			alert('상품 상세 이미지2를 선택하시오.');
+			alert('Select Product Detail Image 2.');
 			form.product_detail2.focus();
 			return;
 		}
 		if(!form.product_detail3.value) {
-			alert('상품 상세 이미지3을 선택하시오.');
+			alert('Select Product Detail Image 3.');
 			form.product_detail3.focus();
 			return;
 		}
 		if(!form.product_description.value) {
-			alert('상품 설명을 입력하시오.');
+			alert('Please enter a product description.');
 			form.product_description.focus();
 			return;
 		}
@@ -84,7 +84,7 @@ window.onload = function() {
 	})	
 }
 
-/*중분류*/
+/*second classification*/
 function categoryChange(e) {
 	var NIKE=["DUNK", "AIR MAX", "AIR FORCE", "VAPOR MAX"];
 	var ADIDAS=["ULTRA BOOST", "NMD", "PHARRELL"];
@@ -115,27 +115,27 @@ function categoryChange(e) {
 <body>
 <%
 String managerId = (String)session.getAttribute("managerId");
-// managerId에 대한 세션값이 없을 때(로그인하지 않았을 때)
+// When there is no session value for managerId (when not login)
 if(managerId == null) {
 	response.sendRedirect("../logon/managerLoginForm.jsp");
 }
-// managerId에 대한 세션값이 있을 때(로그인하였을 때)
+// When there is a session value for managerId (when logined)
 %>
-<%-- 상품 분류
+<%-- product classification
 Nike, Adidas, Jordan, Yeezy, Luxury, all
 --%>
 <div id="container">
-	<h3>상품 등록</h3>
+	<h3>Product Registration</h3>
 	<form method="post" action="productRegisterPro.jsp" name="registerForm" enctype="multipart/form-data">
 	<table>
 		<tr class="first_row">
-			<td colspan="2"><a href="../managerMain.jsp">관리자 메인</a></td>
+			<td colspan="2"><a href="../managerMain.jsp">Admin main</a></td>
 		</tr>
 		<tr>
-			<th width="25%">브랜드 선택</th>
+			<th width="25%">Select the Brand</th>
 			<td width="75%">
 			<select name="product_brand" onchange="categoryChange(this)">
-				<option selected>브랜드를 선택하세요</option>
+				<option selected>Select the brand</option>
 				<option value="NIKE">NIKE</option>
 				<option value="ADIDAS">ADIDAS</option>
 				<option value="JORDAN">JORDAN</option>
@@ -145,59 +145,59 @@ Nike, Adidas, Jordan, Yeezy, Luxury, all
 			</td>
 		</tr>
 		<tr>
-			<th width="25%">컬렉션 선택</th>
+			<th width="25%">Select the Collection</th>
 			<td width="75%">
 			<select name="product_model" id="model">
-				<option>선택하세요.</option>
+				<option>Please select.</option>
 			</select>
 			</td>
 		</tr>
 		
 		<tr>
-			<th>상품 이름</th>
+			<th>Product Name</th>
 			<td><input type="text" name="product_title" size="40"></td>
 		</tr>
 		<tr>
-			<th>상품 가격</th>
+			<th>Product Price</th>
 			<td><input type="number" name="product_price" size="10" min="0" max="1000000">$</td>
 		</tr>
 		<tr>
-			<th>상품 수량</th>
-			<td><input type="number" name="product_count" size="10" min="0" max="1000000">개</td>
+			<th>Product Quantity</th>
+			<td><input type="number" name="product_count" size="10" min="0" max="1000000">Qty</td>
 		</tr>
 		<tr>
-			<th>상품 사이즈</th>
+			<th>Product Size</th>
 			<td><input type="number" name="product_size" size="40"></td>
 		</tr>	
 		<tr>
-			<th>출시일</th>
+			<th>Release Date</th>
 			<td><input type="text" name="product_date" size="40"></td>
 		</tr>	
 		<tr>
-			<th>상품 대표 이미지</th>
+			<th>Product Representative Image</th>
 			<td><input type="file" name="product_image"></td>
 		</tr>
 		<tr>
-			<th>상품 상세 이미지 1</th>
+			<th>Product Detail Image 1</th>
 			<td><input type="file" name="product_detail1"></td>
 		</tr>
 		<tr>
-			<th>상품 상세 이미지 2</th>
+			<th>Product Detail Image 2</th>
 			<td><input type="file" name="product_detail2"></td>
 		</tr>
 		<tr>
-			<th>상품 상세 이미지 3</th>
+			<th>Product Detail Image 3</th>
 			<td><input type="file" name="product_detail3"></td>
 		</tr>
 		<tr>
-			<th>상품 내용</th>
+			<th>Product Content</th>
 			<td><textarea name="product_description" rows="13" cols="48"></textarea></td>
 		</tr>	
 		<tr class="btns_row">
 			<td colspan="2">
-				<input type="button" value="상품 등록" id="registerBtn">
-				<input type="reset" value="다시 입력">
-				<input type="button" value="상품 목록" onclick="location='productList.jsp'">
+				<input type="button" value="Product Registration" id="registerBtn">
+				<input type="reset" value="Clear">
+				<input type="button" value="Product List" onclick="location='productList.jsp'">
 			</td>
 		</tr>
 	</table>
