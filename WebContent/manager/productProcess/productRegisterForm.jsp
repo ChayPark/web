@@ -19,7 +19,7 @@ a { text-decoration: none; color: #409caf; font-weight: 700;}
 .btns_row input { width: 80px; height: 30px; border: 0; background: #b8d6f0; color: black; 
 cursor: pointer; font-weight: 700; margin: 0 5px;}
 .btns_row input:hover { background: white; color: #b8d6f0; border: 1px solid black;}
-/* number 속성에서 화살표 버튼 없애는 방법 */
+/* How to remove arrow buttons from number attributes */
 input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0;}
 </style>
 <script>
