@@ -22,7 +22,7 @@ int maxSize = 1024 * 1024 * 5;
 // The absolute location of the web server in which the upload file is to be stored is obtained (it is the management area of the Tomcat server and it is not accessible)
 //ServletContext context = getServletContext();
 //String realFolder = context.getRealPath(saveFolder);
-//String fileName = ""; // 웹서버에 저장된 파일 이름
+//String fileName = ""; // The file name saved in the web server
 
 // the location where the file is uploaded
 String realFolder = "c:/images_shoes21";
