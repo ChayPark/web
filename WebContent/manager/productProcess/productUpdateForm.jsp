@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>상품 수정 폼 페이지</title>
+<title>product modification form page</title>
 <style>
 #container { width: 500px; margin: 20px auto;}
 h3 { text-align: center; border-radius: 15px 15px 0 0; border-bottom: 2px solid #cdc8da; padding: 0.5em; background: #b8d6f0;}
@@ -20,7 +20,7 @@ a { text-decoration: none; color: #409caf; font-weight: 700;}
 .btns_row input { width: 80px; height: 30px; border: 0; background: #b8d6f0; color: black; 
 cursor: pointer; font-weight: 700; margin: 0 5px;}
 .btns_row input:hover { background: white; color: #b8d6f0; border: 1px solid black;}
-/* number 속성에서 화살표 버튼 없애는 방법 */
+/* The way to remove arrow buttons from the number attribute */
 input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0;}
 </style>
 <script>
@@ -29,62 +29,62 @@ window.onload = function() {
 	updateBtn.addEventListener("click", function() {
 		var form = document.updateForm;
 		
-		// product_brand(select로 기본값이 선택), product_model(select), id 
-		// 3개를 제외한 10개 항목에 대한 유효성 검사
+		// product_brand(select is default), product_model(select), id 
+		// Validation of 10 items except 3
 		if(!form.product_title.value) {
-			alert('상품 제목을 입력하시오.');
+			alert('Enter the product title.');
 			form.product_title.focus();
 			return;
 		}
 		if(!form.product_price.value) {
-			alert('상품 가격을 입력하시오.');
+			alert('Enter the price of the item.');
 			form.product_price.focus();
 			return;
 		}
 		if(!form.product_count.value) {
-			alert('상품 수량을 입력하시오.');
+			alert('Please enter the quantity of goods.');
 			form.product_count.focus();
 			return;
 		}
 		if(!form.product_size.value) {
-			alert('사이즈를 입력하시오.');
+			alert('Please enter a size.');
 			form.product_size.focus();
 			return;
 		}
 		if(!form.product_date.value) {
-			alert('출시일을 입력하시오.');
+			alert('Please enter the release date.');
 			form.product_date.focus();
 			return;
 		}
 		if(!form.product_image.value) {
-			alert('상품 대표 이미지를 선택하시오.');
+			alert('Please select a product representative image.');
 			form.product_image.focus();
 			return;
 		}
 		if(!form.product_detail1.value) {
-			alert('상품 상세 이미지1을 선택하시오.');
+			alert('Select Product Detail Image 1.');
 			form.product_detail1.focus();
 			return;
 		}
 		if(!form.product_detail2.value) {
-			alert('상품 상세 이미지2를 선택하시오.');
+			alert('Please select the product detailed image 2.');
 			form.product_detail2.focus();
 			return;
 		}
 		if(!form.product_detail3.value) {
-			alert('상품 상세 이미지3을 선택하시오.');
+			alert('Select Product Detail Image 3.');
 			form.product_detail3.focus();
 			return;
 		}
 		if(!form.product_description.value) {
-			alert('상품 설명을 입력하시오.');
+			alert('Enter the product description.');
 			form.product_description.focus();
 			return;
 		}
 		form.submit();
 	})	
 }
-/*중분류*/
+/*second classification*/
 function categoryChange(e) {
 	var NIKE=["DUNK", "AIR MAX", "AIR FORCE", "VAPOR MAX"];
 	var ADIDAS=["ULTRA BOOST", "NMD", "PHARRELL"];
@@ -114,35 +114,35 @@ function categoryChange(e) {
 <body>
 <%
 String managerId = (String)session.getAttribute("managerId");
-// managerId에 대한 세션값이 없을 때(로그인하지 않았을 때)
+// When there is no session value for managerId (not logged in)
 if(managerId == null) {
 	response.sendRedirect("../logon/managerLoginForm.jsp");
 }
-// managerId에 대한 세션값이 있을 때(로그인하였을 때)
+// When you have a session value for ManagerId (Log in)
 
 int product_id = Integer.parseInt(request.getParameter("product_id"));
 String product_brand = request.getParameter("product_brand");
 String pageNum = request.getParameter("pageNum");
 ProductDataBean product = new ProductDataBean();
 
-// DB 연동, 쿼리 실행 
+// DB link, excutes the query
 ProductDBBean dbPro = ProductDBBean.getInstance();
 product = dbPro.getProduct(product_id);
 %>
 <div id="container">
-	<h3>상품 수정</h3>
+	<h3>Product Modification</h3>
 	<form method="post" action="productUpdatePro.jsp" name="updateForm" enctype="multipart/form-data">
 	<input type="hidden" name="product_id" value="<%=product_id %>">
 	<input type="hidden" name="pageNum" value="<%=pageNum %>"> 
 	<table>
 		<tr class="first_row">
-			<td colspan="2"><a href="../managerMain.jsp">관리자 메인</a></td>
+			<td colspan="2"><a href="../managerMain.jsp">Admin Main</a></td>
 		</tr>
 		<tr>
-			<th width="25%">브랜드 선택</th>
+			<th width="25%">Select the Brand</th>
 			<td width="75%">
 			<select name="product_brand" onchange="categoryChange(this)">
-				<option>브랜드를 선택하세요</option>
+				<option>Select the Brand</option>
 				<option value="NIKE" <%if(product_brand.equals("NIKE")) {%>selected<%}%>>NIKE</option>
 				<option value="ADIDAS" <%if(product_brand.equals("ADIDAS")) {%>selected<%}%>>ADIDAS</option>
 				<option value="JORDAN" <%if(product_brand.equals("JORDAN")) {%>selected<%}%>>JORDAN</option>
@@ -152,10 +152,10 @@ product = dbPro.getProduct(product_id);
 			</td>
 		</tr>
 		<tr>
-			<th width="25%">컬렉션 선택</th>
+			<th width="25%">Select the Collection</th>
 			<td width="75%">
 			<select name="product_model" id="model">
-				<option>선택하세요.</option>
+				<option>Select the product</option>
 				<option value="DUNK" <%if(product_brand.equals("DUNK")) {%>selected<%}%>>DUNK</option>
 				<option value="AIR MAX" <%if(product_brand.equals("AIR MAX")) {%>selected<%}%>>AIR MAX</option>
 				<option value="AIR FORCE" <%if(product_brand.equals("AIR FORCE")) {%>selected<%}%>>AIR FORCE</option>
@@ -190,22 +190,22 @@ product = dbPro.getProduct(product_id);
 		</tr>
 		
 		<tr>
-			<th>상품 이름</th>
+			<th>Product Name</th>
 			<td><input type="text" name="product_title" size="40" value="<%=product.getProduct_title()%>"></td>
 		</tr>
 		<tr>
-			<th>상품 가격</th>
+			<th>Product Price</th>
 			<td><input type="number" name="product_price" size="10" min="0" max="1000000" value="<%=product.getProduct_price()%>">$</td>
 		</tr>
 		<tr>
-			<th>상품 수량</th>
+			<th>Product Quantity</th>
 			<td><input type="number" name="product_count" size="10" min="0" max="1000000" value="<%=product.getProduct_count()%>">개</td>
 		</tr>
 		<tr>
-			<th>상품 사이즈</th>
+			<th>Product Size</th>
 			<%-- <td>
 				<select name="product_size">
-					<option>사이즈를 선택하세요</option>
+					<option>Select your size</option>
 					<option value="6" <%if(product_size == 6) {%>selected<%}%>>6</option>
 					<option value="7" <%if(product_size == 7) {%>selected<%}%>>7</option>
 					<option value="8" <%if(product_size == 8) {%>selected<%}%>>8</option>
@@ -218,34 +218,34 @@ product = dbPro.getProduct(product_id);
 			<td><input type="number" name="product_size" size="40" value="<%=product.getProduct_size()%>"></td>
 		</tr>	
 		<tr>
-			<th>출시일</th>
+			<th>Release Date</th>
 			<td><input type="text" name="product_date" size="40" value="<%=product.getProduct_date()%>"></td>
 		</tr>	
 		<tr>
-			<th>상품 이미지</th>
+			<th>Product Image</th>
 			<td><input type="file" name="product_image"></td>
 		</tr>
 		<tr>
-			<th>상품 상세 이미지 1</th>
+			<th>Product detail image1</th>
 			<td><input type="file" name="product_detail1"></td>
 		</tr>
 		<tr>
-			<th>상품 상세 이미지 2</th>
+			<th>Product detail image2</th>
 			<td><input type="file" name="product_detail2"></td>
 		</tr>
 		<tr>
-			<th>상품 상세 이미지 3</th>
+			<th>Product detail image3</th>
 			<td><input type="file" name="product_detail3"></td>
 		</tr>
 		<tr>
-			<th>상품 내용</th>
+			<th>Product Description</th>
 			<td><textarea name="product_description" rows="13" cols="48"><%=product.getProduct_description()%></textarea></td>
 		</tr>	
 		<tr class="btns_row">
 			<td colspan="2">
-				<input type="button" value="상품 수정" id="updateBtn">
-				<input type="reset" value="다시 입력">
-				<input type="button" value="상품 목록" onclick="location='productList.jsp?product_brand=<%=product_brand%>&pageNum=<%=pageNum%>'">
+				<input type="button" value="Product Modification" id="updateBtn">
+				<input type="reset" value="Clear">
+				<input type="button" value="Product List" onclick="location='productList.jsp?product_brand=<%=product_brand%>&pageNum=<%=pageNum%>'">
 			</td>
 		</tr>
 	</table>
