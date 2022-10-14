@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>구매 확인 폼(상품 상세보기)</title>
+<title>Purchase confirmation Form(detailed of product)</title>
 </head>
 <body>
 
