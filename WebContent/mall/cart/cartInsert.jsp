@@ -24,7 +24,6 @@ if(memberId == null) {
 int product_id = Integer.parseInt(request.getParameter("product_id"));
 int buy_price = Integer.parseInt(request.getParameter("sale_price"));
 int buy_count = Integer.parseInt(request.getParameter("p_number"));
-int product_size = Integer.parseInt(request.getParameter("product_size"));
 String product_title = request.getParameter("product_title");
 String product_image = request.getParameter("product_image");
 
@@ -32,7 +31,6 @@ CartDataBean cart = new CartDataBean();
 cart.setBuyer(memberId);
 cart.setProduct_id(product_id);
 cart.setProduct_title(product_title);
-cart.setProduct_size(product_size);
 cart.setBuy_price(buy_price);
 cart.setBuy_count(buy_count);
 cart.setProduct_image(product_image);

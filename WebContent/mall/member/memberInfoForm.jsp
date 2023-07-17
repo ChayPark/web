@@ -9,12 +9,12 @@
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script> 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Monoton&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
 #container { width: 500px; margin: 0 auto;}
-#m_title { font-size: 3.5em; font-family: 'Luckiest Guy', cursive; text-align: center; margin-top: 30px;}
+#m_title { font-size: 2.5em; font-family: 'Monoton', cursive; text-align: center; margin-top: 30px;}
 #m_title a { text-decoration: none; color: #495057;}
-#s_title { font-size: 2em; font-family: 'Jua', sans-serif; text-align: center; color: #495057;}
+#s_title { font-size: 2em; font-family: 'Jua', sans-serif; text-align: center; color: #495057; margin-bottom: 10px;}
 table { width: 100%; border: 1px solid black; border-collapse: collapse;}
 th, td { border: 1px solid black;}
 th { background: #ced4da;}
@@ -133,7 +133,7 @@ window.onload = function() {
 		}).open();
 	})
 	
-	// 회원 탈퇴(회원삭제) 버튼을 클릭할 때
+	// 회원탈퇴(회원삭제) 버튼을 클릭할 때
 	var btn_delete = document.getElementById("btn_delete");
 	btn_delete.addEventListener("click", function() {
 		if(!form.passwd.value) {
@@ -146,7 +146,7 @@ window.onload = function() {
 			form.passwd2.focus();
 			return;
 		}
-		form.action = 'memberDeletePro.jsp'; // action 변경 
+		form.action = 'memberDeletePro.jsp'; // action 변경
 		form.submit();
 	})
 }
@@ -162,18 +162,17 @@ if(memberId == null) { // 로그인을 하지 않았을 때
 // DB 연동, 회원 정보를 가지고 옴.
 MemberDBBean memberPro = MemberDBBean.getInstance();
 MemberDataBean member = memberPro.getMember(memberId);
-
 %>
 
 <div id="container">
-	<div id="m_title"><a href="../shop/shopMain.jsp">CHAYISH</a></div>
+	<div id="m_title"><a href="../shop/shopMain.jsp">BOOKMALL21</a></div>
 	<div id="s_title">회원 정보 확인</div>
 	<form method="post" action="memberUpdatePro.jsp" name="updateForm">
 		<table>
 			<tr>
 				<th width="25%">아이디</th>
 				<td width="75%">
-					<input type="text" name="id" size="15" value="<%=member.getId() %>" readonly><br>
+					<input type="text" name="id" id="id" size="15" value="<%=member.getId() %>" readonly><br>
 					<span id="chk_id">아이디는 수정이 불가합니다.</span>
 				</td>
 			</tr>
@@ -195,21 +194,6 @@ MemberDataBean member = memberPro.getMember(memberId);
 				<th>이름</th>
 				<td>
 					<input type="text" name="name" size="15" value="<%=member.getName() %>">
-				</td>
-			</tr>
-			<tr>
-				<th>사이즈</th>
-				<td>
-					<select name="size">
-					  <option value="" selected>선택하세요</option>
-	                  <option value="6" >6</option>
-	                  <option value="7">7</option>
-	                  <option value="8">8</option>
-	                  <option value="9">9</option>
-	                  <option value="10">10</option>
-	                  <option value="11">11</option>
-	                  <option value="12">12</option>
-	               </select>
 				</td>
 			</tr>
 			<tr>
@@ -235,7 +219,7 @@ MemberDataBean member = memberPro.getMember(memberId);
 			</tr>
 		</table>
 		<div id="btns">
-			<input type="button" value="회원정보수정" id="btn_update">&ensp; <!-- nbsp: 1칸, ensp: 2칸, emsp: 3칸 -->
+			<input type="button" value="회원정보수정" id="btn_update">&ensp; <!-- nbsp:1칸, ensp:2칸, emsp:3칸 -->
 			<input type="button" value="회원탈퇴" id="btn_delete">
 		</div>
 	</form>

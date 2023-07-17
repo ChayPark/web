@@ -4,17 +4,16 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Manager login form page</title>
+<title>관리자 로그인 폼 페이지</title>
 <style>
 #container { width: 300px; margin: 20px auto;}
-h2 { text-align: center; color: white; border-radius: 15px 15px 15px 0; border: 3px solid #dee2e6; padding: 0.5em 0.6em; color: white; font-size: 1.5em; background: #b7c0df;}
-.btns_row { text-align: center;}
+h2, .btns_row { text-align: center;}
 table { width: 100%; border: 1px solid black; border-collapse: collapse;}
-th, td { border: 1px solid black; color: white;}
-th { background: #b7c0df;}
+th, td { border: 1px solid black;}
+th { background: rgba(255, 187, 0, 0.7);}
 td { padding-left: 10px;}
 tr { height: 37px;}
-input[type="button"] { width: 80px; height: 30px; background: #9f9cb6; color: white; border: 0; cursor: pointer; font-weight: 700;} 
+input[type="button"] { width: 80px; height: 30px; background: black; color: white; border: 0; cursor: pointer; font-weight: 700;} 
 input[type="button"]:hover { background: white; color: black; border: 1px solid black;}
 </style>
 <script>
@@ -24,12 +23,12 @@ window.onload = function() {
 		var form = document.loginForm;
 		
 		if(!form.managerId.value) {
-			alert("Enter Manager's ID.");
+			alert("관리자 아이디를 입력하시오.");
 			form.managerId.focus();
 			return;
 		}
 		if(!form.managerPasswd.value) {
-			alert("Enther Manager's Password.");
+			alert("관리자 비밀번호를 입력하시오.");
 			form.managerPasswd.focus();
 			return;
 		}
@@ -41,15 +40,15 @@ window.onload = function() {
 <body>
 
 <div id="container">
-	<h2>Manager Login</h2>
+	<h2>관리자 로그인</h2>
 	<form method="post" action="managerLoginPro.jsp" name="loginForm">
 		<table>
 			<tr>
-				<th width="30%">ID</th>
+				<th width="30%">아이디</th>
 				<td width="70%"><input type="text" name="managerId" size="24"></td>			
 			</tr>
 			<tr>
-				<th>Password</th>
+				<th>비밀번호</th>
 				<td><input type="password" name="managerPasswd" size="24" maxlength="16"></td>			
 			</tr>
 			<tr class="btns_row">

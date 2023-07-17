@@ -17,5 +17,6 @@ CartDBBean cartPro = CartDBBean.getIntance();
 cartPro.deleteCart(cart_id);
 response.sendRedirect("cartList.jsp");
 %>
+
 </body>
 </html>

@@ -4,15 +4,15 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Admin logout page</title>
+<title>관리자 로그아웃 처리 페이지</title>
 </head>
 <body>
 
 <%
-// Delete Session
+// 세션을 삭제(무효화), 둘 중 하나 사용
 //session.removeAttribute("managerId");
 session.invalidate();
-out.print("<script>alert('Logout successfully.');location='../managerMain.jsp';</script>");
+out.print("<script>alert('로그아웃되었습니다.');location='../managerMain.jsp';</script>");
 %>
 
 </body>

@@ -7,83 +7,80 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Product Modification Processing Page</title>
+<title>상품 수정 처리 페이지</title>
 </head>
 <body>
 <%
 request.setCharacterEncoding("utf-8");
 
-// File upload processing object and variable declaration
+// 파일 업로드 처리 객체와 변수 선언
 MultipartRequest imageUp = null;
 //String saveFolder = "/imageFile";
 String encType = "utf-8";
 int maxSize = 1024 * 1024 * 5;
 
-//Stack Creation - imageUp saves image file names to the stack -> Save them back to the stack for import in order
-//Create list - Save the image file name stored in the stack to the list
-Stack<String> st = new Stack<String>();
-List<String> fileNames = new ArrayList<String>();
+// 업로드 파일이 저장될 웹서버의 절대 위치를 구함(Tomcat 서버의 관리 영역이어서 접근 불가, 사용하지 않음)
+//ServletContext context = getServletContext();
+//String realFolder = context.getRealPath(saveFolder);
+//String fileName = ""; // 웹서버에 저장된 파일 이름
 
-// The address where the file is uploaded
-String realFolder = "c:/images_shoes21";
+// 파일이 업로드되는 위치
+String realFolder = "c:/images_mall21";
 String fileName = "";
 
-// upload file processing
+// 업로드 파일 처리
 try {
 	imageUp = new MultipartRequest(request, realFolder, maxSize, encType, new DefaultFileRenamePolicy());
 	
 	Enumeration<?> files = imageUp.getFileNames();
-	// Store unknown filenames in a stack
 	while(files.hasMoreElements()) {
 		String name = (String)files.nextElement();
-		st.push(imageUp.getFilesystemName(name));
-	}
-	// Save the image file name stored in the stack back to the list
-	while(!st.isEmpty()) {
-		fileNames.add(st.pop());
+		fileName = imageUp.getFilesystemName(name);
 	}
 } catch(Exception e) {
 	e.printStackTrace();
 }
 
-//product_id, pageNum data
+//product_id, pageNum 데이터를 얻음
 int product_id = Integer.parseInt(imageUp.getParameter("product_id"));
 String pageNum = imageUp.getParameter("pageNum");
 
-// Receive 9 values from the form and process them as imageUp, a MultipartRequest object (because file upload is included)
-// - File uploads are handled separately
+// 폼에서 넘어오는 9개의 값을 받아서 MultipartRequest 객체인 imageUp으로 처리(파일 업로드가 포함되어 있으므로)
+// - 파일 업로드는 따로 처리
 // MultipartRequest 객체는 useBean에서 setProperty 액션태그가 동작하지 않음
-// - Therefore, it is necessary to receive one value from the form and process it.
-String product_brand = imageUp.getParameter("product_brand");
-String product_model = imageUp.getParameter("product_model");
+// - 따라서, 폼에서 넘어오는 값을 하나씩 받아서 처리해야함.
+String product_kind = imageUp.getParameter("product_kind");
 String product_title = imageUp.getParameter("product_title");
 int product_price = Integer.parseInt(imageUp.getParameter("product_price")); // int
 int product_count = Integer.parseInt(imageUp.getParameter("product_count")); // int
-int product_size = Integer.parseInt(imageUp.getParameter("product_size")); // int
-String product_date = imageUp.getParameter("product_date");
-String product_description = imageUp.getParameter("product_description");
+String author = imageUp.getParameter("author");
+String publishing_com = imageUp.getParameter("publishing_com");
+String publishing_date = imageUp.getParameter("publishing_date");
+String product_content = imageUp.getParameter("product_content");
+int discount_rate = Integer.parseInt(imageUp.getParameter("discount_rate")); // int
 
-// Product object creation, set value on product object
+// Product 객체 생성, product 객체에 값을 설정
 ProductDataBean product = new ProductDataBean();
-product.setProduct_id(product_id); // product_id 추가 
-product.setProduct_brand(product_brand);
-product.setProduct_model(product_model);
+product.setProduct_id(product_id); // product_id 추가
+product.setProduct_kind(product_kind);
 product.setProduct_title(product_title);
 product.setProduct_price(product_price);
 product.setProduct_count(product_count);
-product.setProduct_size(product_size);
-product.setProduct_date(product_date);
-product.setProduct_description(product_description);
-//fileName
-product.setProduct_image(fileNames.get(0));
-product.setProduct_detail1(fileNames.get(1));
-product.setProduct_detail2(fileNames.get(2));
-product.setProduct_detail3(fileNames.get(3));
+product.setAuthor(author);
+product.setPublishing_com(publishing_com);
+product.setPublishing_date(publishing_date);
+product.setProduct_content(product_content);
+product.setDiscount_rate(discount_rate);
+// fileName - 이미지 파일을 선택하지 않는다면 ?
+product.setProduct_image(fileName);
+// reg_date는 수정하지 않음.
+// product.setReg_date(new Timestamp(System.currentTimeMillis()));
 
-// DB link, excutes query, move to product list
+// DB 연동, 쿼리문 실행, 상품목록으로 이동
 ProductDBBean dbPro = ProductDBBean.getInstance();
 dbPro.updateProduct(product);
-response.sendRedirect("productList.jsp?product_brand=" + product_brand + "&pageNum=" + pageNum);
+response.sendRedirect("productList.jsp?product_kind=" + product_kind + "&pageNum=" + pageNum);
 %>
+
 </body>
 </html>
